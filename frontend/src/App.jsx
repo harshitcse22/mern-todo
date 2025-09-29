@@ -9,7 +9,13 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '' // Falls back to relative URL if not set
+  baseURL: import.meta.env.VITE_API_URL || window.location.origin
+});
+
+// Add request interceptor for error handling
+api.interceptors.request.use((config) => {
+  console.log('Making request to:', config.url);
+  return config;
 });
 
 function App() {
