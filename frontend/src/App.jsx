@@ -6,6 +6,12 @@ import {FaTrash} from "react-icons/fa6";
 import {IoClipboardOutline} from "react-icons/io5";
 import './App.css'
 import axios from 'axios';
+
+// Create axios instance with base URL
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '' // Falls back to relative URL if not set
+});
+
 function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState([]);
@@ -17,7 +23,7 @@ function App() {
      if(!newTodo.trim()) return;
 
    try{
-     const response = await axios.post("/api/todos", {text: newTodo})
+     const response = await api.post("/api/todos", {text: newTodo})
      setTodos([...todos, response.data])
      setNewTodo('');
    }catch(error){
@@ -27,7 +33,7 @@ function App() {
 
      const fetchTodos = async () =>{
         try{
-          const response = await axios.get("/api/todos");
+          const response = await api.get("/api/todos");
           console.log(response.data);
           setTodos(response.data);
         }catch(error){
@@ -46,7 +52,7 @@ function App() {
 
       const saveEdit = async (id) =>{
          try{
-           const response = await axios.patch(`/api/todos/${id}`,{
+           const response = await api.patch(`/api/todos/${id}`,{
               text:editedText
            })
            setTodos(todos.map((todo) => (todo._id === id ? response.data : todo)))
@@ -58,7 +64,7 @@ function App() {
 
        const deleteTodo = async (id) =>{
           try{
-            await axios.delete(`/api/todos/${id}`);
+            await api.delete(`/api/todos/${id}`);
             setTodos(todos.filter((todo) => todo._id !== id))
           }catch(error){
              console.log("Error Deleting todo:", error);
@@ -68,7 +74,7 @@ function App() {
         const toggleTodo = async (id) => {
            try{
               const todo = todos.find((t) => t._id === id)
-              const response = await axios.patch(`/api/todos/${id}`,{
+              const response = await api.patch(`/api/todos/${id}`,{
                  completed: !todo.completed
               })
               setTodos(todos.map((t) => t._id === id ? response.data : t))

@@ -10,7 +10,7 @@ router.get('/', async (req, res) =>{
       res.json(todos);
     }catch(error){
          res.status(500).json({
-            message:err.message
+            message: error.message
          })
     }
 })
@@ -24,7 +24,7 @@ router.post("/", async (req,res) =>{
       const newTodo = await todo.save();
       res.status(201).json(newTodo);
     }catch(error){
-         res.status(400).json({message: err.message})
+         res.status(400).json({message: error.message})
     }
 })
 
@@ -47,7 +47,7 @@ router.patch("/:id", async (req,res) =>{
 
     }catch(error){
        res.status(400).json({
-         message: err.message
+         message: error.message
        });
     }
 });
@@ -59,7 +59,7 @@ router.delete("/:id", async (req,res) =>{
        res.json({ message: "Todo Deleted" });
     }catch(error){
          res.status(500).json({
-            message: err.message
+            message: error.message
          });
     }
 });
